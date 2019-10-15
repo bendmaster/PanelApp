@@ -1,0 +1,36 @@
+﻿@model IEnumerable<HomeApp.Data.Device>
+
+@{
+    ViewData["Title"] = "Panel";
+}
+
+<h1>Panel</h1>
+
+<p>
+    <a asp-action="AddDevice">AddDevice</a>
+</p>
+<div class="container">
+<div class="row">
+
+@foreach (var item in Model) {
+        <div class="col-md-4 mb-4 p-4 card border-info">
+            <div>
+                <img class="img-fluid" src="~/img/circuit-board.svg" />
+            </div>
+            <div>
+                <b>@Html.DisplayNameFor(modelItem => item.DeviceID): </b>
+                @Html.DisplayFor(modelItem => item.DeviceID)
+            </div>
+            <div>
+                <b>@Html.DisplayNameFor(modelItem => item.DeviceName): </b>
+                @Html.DisplayFor(modelItem => item.DeviceName)
+            </div>
+            <span hidden>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </span>
+        </div>
+}
+</div>
+    </div>
