@@ -9,13 +9,14 @@ namespace HomeApp.Data
 {
     public class Device
     {
-        [Key]
-        [Required]
-        [Display(Name ="Device ID")]
-        public string DeviceID { get; set; }
-        [Required]
-        [Display(Name = "Device Name")]
+        [Key, Required]
+        public int DeviceID { get; set; }
+        [Display(Name = "Device ID"), Required]
+        public string ParticleDeviceID { get; set; }
+        [Required, Display(Name = "Device Name")]
         public string DeviceName { get; set; }
+        [DisplayFormat(NullDisplayText = "img/circuit-board.svg", ApplyFormatInEditMode = true)]
+        public string ImageLocation { get; set; }
         public IEnumerable<DeviceEvent> Events {get; set;}
     }
 
