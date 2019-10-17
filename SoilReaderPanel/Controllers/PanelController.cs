@@ -26,12 +26,17 @@ namespace SoilReaderPanel.Controllers
         {
             List<DeviceViewModel> listOfDevices = new List<DeviceViewModel>();
 
-            
+            var readings = new List<Task<string>>();
+
+            for (int i = 0; i < 90; i++)
+            {
+                readings.Add(tokenClient.GetData("2d0041001851353530333932", "soil"));
+            }
 
             for (int i=0; i < 9; i++)
             {
-                string reading = (await tokenClient.GetData("2d0041001851353530333932", "soil"));
-                listOfDevices.Add(new DeviceViewModel(i, "2d0041001851353530333932", "Office Spider Plant", null, reading));
+                //string reading = tokenClient.GetData("2d0041001851353530333932", "soil");
+                listOfDevices.Add(new DeviceViewModel(i, "2d0041001851353530333932", "Office Spider Plant", null, readings[i].Result));
             }
             
             return View("Panel", listOfDevices);
