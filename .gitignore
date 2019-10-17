@@ -3,5 +3,6 @@
 ################################################################################
 
 /.vs
-/SoilReaderPanel/obj/Release/netcoreapp3.0
-/SoilReaderPanel/bin/Debug/netcoreapp3.0
+SoilReaderPanel/bin
+SoilReaderPanel/obj
+SoilReaderPanel/*.csproj*

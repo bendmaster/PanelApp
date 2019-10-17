@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SoilReaderPanel.Data;
 using SoilReaderPanel.Services;
 
 namespace SoilReaderPanel
@@ -26,6 +28,10 @@ namespace SoilReaderPanel
         {
             services.AddControllersWithViews();
             services.AddHttpClient();
+            services.AddDbContext<AppDbContext>(options =>
+           {
+               options.UseSqlServer(Configuration["dbString"]);
+           });
             services.AddSingleton<TokenFactory>();
         }
 
@@ -53,7 +59,7 @@ namespace SoilReaderPanel
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Panel}/{action=Index}/{id?}");
             });
         }
     }

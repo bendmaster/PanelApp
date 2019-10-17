@@ -15,7 +15,7 @@ namespace HomeApp.Data
         public string ParticleDeviceID { get; set; }
         [Required, Display(Name = "Device Name")]
         public string DeviceName { get; set; }
-        [DisplayFormat(NullDisplayText = "img/circuit-board.svg", ApplyFormatInEditMode = true)]
+        [Display(Name="Current Image"), DisplayFormat(NullDisplayText = "/img/circuit-board.svg", ApplyFormatInEditMode = true)]
         public string ImageLocation { get; set; }
         public IEnumerable<DeviceEvent> Events {get; set;}
     }

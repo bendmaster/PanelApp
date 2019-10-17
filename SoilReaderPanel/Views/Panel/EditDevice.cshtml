@@ -1,0 +1,45 @@
+﻿@model HomeApp.Data.Device
+
+@{
+    ViewData["Title"] = "EditDevice";
+}
+
+<h1>EditDevice</h1>
+
+<h4>Device</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditDevice">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="DeviceID" />
+            <div class="form-group">
+                <label asp-for="ParticleDeviceID" class="control-label"></label>
+                <input asp-for="ParticleDeviceID" class="form-control" />
+                <span asp-validation-for="ParticleDeviceID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeviceName" class="control-label"></label>
+                <input asp-for="DeviceName" class="form-control" />
+                <span asp-validation-for="DeviceName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageLocation" class="control-label"></label>
+                <input asp-for="ImageLocation" class="form-control" hidden/>
+                <img class="img-fluid" src=@Html.DisplayFor(item=>item.ImageLocation) />
+                <span asp-validation-for="ImageLocation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

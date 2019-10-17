@@ -12,12 +12,12 @@ namespace SoilReaderPanel.Models
         [Display(Name = "Reading")]
         public string Reading { get; set; }
 
-        public DeviceViewModel(int deviceid, string particleid, string name, string img, string reading)
+        public DeviceViewModel(Device device, string reading)
         {
-            base.DeviceID = deviceid;
-            base.ParticleDeviceID = particleid;
-            base.DeviceName = name;
-            base.ImageLocation = img;
+            base.DeviceID = device.DeviceID;
+            base.ParticleDeviceID = device.ParticleDeviceID;
+            base.DeviceName = device.DeviceName;
+            base.ImageLocation = device.ImageLocation;
             Reading = reading;
         }
     }
