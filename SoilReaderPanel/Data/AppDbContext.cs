@@ -1,4 +1,5 @@
 ﻿using HomeApp.Data;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SoilReaderPanel.Models;
 using SoilReaderPanel.Services;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SoilReaderPanel.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<User>
     {
         private readonly TokenFactory _tokenClient;
         public AppDbContext(DbContextOptions<AppDbContext> options, TokenFactory tf) : base(options) 
@@ -20,8 +21,7 @@ namespace SoilReaderPanel.Data
 
         public DbSet<Device> Device { get; set; }
         public DbSet<DeviceEvent> DeviceEvent { get; set; }
-
-
+        
         public Device getDevice(int deviceId) 
         {
             var query = from d in this.Device
