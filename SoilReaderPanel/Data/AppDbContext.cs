@@ -14,6 +14,8 @@ namespace SoilReaderPanel.Data
     public class AppDbContext : IdentityDbContext<User>
     {
         private readonly TokenFactory _tokenClient;
+        static private Dictionary<string, string> deviceReadings = new Dictionary<string, string>();
+        private Dictionary<string, Task<string>> deviceReadingsAsync = new Dictionary<string, Task<string>>();
         public AppDbContext(DbContextOptions<AppDbContext> options, TokenFactory tf) : base(options) 
         {
             _tokenClient = tf;
@@ -42,12 +44,27 @@ namespace SoilReaderPanel.Data
 
             for (int i = 0; i < deviceList.Count; i++)
             {
-                readings.Add(_tokenClient.GetData(deviceList[i].ParticleDeviceID, "soil"));
+                string deviceID = deviceList[i].ParticleDeviceID;
+                //Caching to limit calls to device and improve consistency
+                if (!deviceReadings.ContainsKey(deviceID))
+                {
+                    deviceReadingsAsync.Add(deviceID, _tokenClient.GetData(deviceList[i].ParticleDeviceID, "soil"));
+                }
             }
 
             for (int i = 0; i < deviceList.Count; i++)
             {
-                AllDevices.Add(new DeviceViewModel(deviceList[i], readings[i].Result));
+                string deviceID = deviceList[i].ParticleDeviceID;
+                if (deviceReadings.ContainsKey(deviceID))
+                {
+                    AllDevices.Add(new DeviceViewModel(deviceList[i], deviceReadings[deviceID]));                    
+                }
+                else
+                {
+                    deviceReadings.Add(deviceID, deviceReadingsAsync[deviceID].Result);
+                    AllDevices.Add(new DeviceViewModel(deviceList[i], deviceReadings[deviceID]));
+                }
+                
             }
 
             return AllDevices;
@@ -55,7 +72,7 @@ namespace SoilReaderPanel.Data
 
         public void getAllDeviceEvents(int deviceId) { 
         
-            //TODO
+            //TODO: Get all device events to display history
 
         }
 

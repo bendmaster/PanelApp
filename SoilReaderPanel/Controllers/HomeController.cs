@@ -18,8 +18,7 @@ namespace SoilReaderPanel.Controllers
         {
             _logger = logger;
         }
-        [Route("/")]
-        [Route("/Index")]
+        [Route("/"), Route("/Index")]
         public IActionResult Index()
         {
             return View();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using HomeApp.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SoilReaderPanel.Data;
@@ -12,14 +13,13 @@ using SoilReaderPanel.Services;
 
 namespace SoilReaderPanel.Controllers
 {
+    [Authorize("isAdmin")]
     public class PanelController : Controller
     {
         
         private readonly AppDbContext _context;
-        //public PanelController(IHttpClientFactory httpClientFactory, IConfiguration config) 
-        //{
-        //    tokenClient = new TokenFactory(httpClientFactory, config);
-        //}
+
+
         public PanelController(AppDbContext context)
         {
             _context = context;
