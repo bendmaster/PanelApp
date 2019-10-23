@@ -28,7 +28,7 @@ namespace HomeApp.Data
         public string eventType { get; set; }
 
         [Display(Name = "Reading")]
-        string data { get; set; }
+        public string data { get; set; }
         [Timestamp]
         public DateTime TIMESTAMP { get; set; }
         public Device Device { get; set; }

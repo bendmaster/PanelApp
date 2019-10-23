@@ -61,18 +61,45 @@ namespace SoilReaderPanel.Data
                 }
                 else
                 {
-                    deviceReadings.Add(deviceID, deviceReadingsAsync[deviceID].Result);
+                    var newDeviceEvent = deviceReadingsAsync[deviceID].Result;
+                    DeviceEvent.Add(new DeviceEvent()
+                    {
+                        eventType = "soil",
+                        data = newDeviceEvent,
+                        Device = deviceList[i]
+                    });
+                    deviceReadings.Add(deviceID, newDeviceEvent);
                     AllDevices.Add(new DeviceViewModel(deviceList[i], deviceReadings[deviceID]));
                 }
                 
             }
 
+            this.SaveChanges();
+
             return AllDevices;
         }
 
-        public void getAllDeviceEvents(int deviceId) { 
-        
+        public string updateDevice(Device device)
+        {
+            //TODO: implement way to update device reading either on request or by daemon
+            var newEvent = _tokenClient.GetData(device.ParticleDeviceID, "soil");
+            DeviceEvent.Add(new DeviceEvent()
+            {
+                eventType = "soil",
+                data = newEvent.Result,
+                Device = device
+            });
+            this.SaveChanges();
+            return newEvent.Result;
+        }
+
+        public List<DeviceEvent> getAllDeviceEvents(int deviceId) {
+
             //TODO: Get all device events to display history
+            List<DeviceEvent> events = DeviceEvent.Where(d => d.Device.DeviceID == deviceId).ToList();
+
+            return events;
+
 
         }
 
