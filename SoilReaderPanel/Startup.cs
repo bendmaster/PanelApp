@@ -14,6 +14,7 @@ using SoilReaderPanel.Services;
 using SoilReaderPanel.Data;
 using SoilReaderPanel.Policies;
 using Microsoft.AspNetCore.Authorization;
+using HomeApp.Data;
 
 namespace SoilReaderPanel
 {
@@ -49,6 +50,7 @@ namespace SoilReaderPanel
                 });
             });
             services.AddSingleton<TokenFactory>();
+            services.AddScoped<IDeviceRepository, DeviceRepository>();
             services.AddSingleton<IAuthorizationHandler, IsAdminHandler>();
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();

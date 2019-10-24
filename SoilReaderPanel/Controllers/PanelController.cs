@@ -16,17 +16,15 @@ namespace SoilReaderPanel.Controllers
     [Authorize("isAdmin")]
     public class PanelController : Controller
     {
-        
-        private readonly AppDbContext _context;
+        private readonly IDeviceRepository _deviceReposity;
 
-
-        public PanelController(AppDbContext context)
+        public PanelController(IDeviceRepository deviceRepository)
         {
-            _context = context;
+            _deviceReposity = deviceRepository;
         }
         public IActionResult Index()
         {
-            List<DeviceViewModel> listOfDevices = _context.getAllDevices();
+            List<DeviceViewModel> listOfDevices = _deviceReposity.GetAllDevices();
             
             return View("Panel", listOfDevices);
         }
@@ -42,9 +40,11 @@ namespace SoilReaderPanel.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Device.Add(device);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+                bool pass = _deviceReposity.AddDevice(device);
+                if (pass)
+                {
+                    return RedirectToAction("Index");
+                }
             }
             return View("AddDevice", device);
         }
@@ -52,9 +52,18 @@ namespace SoilReaderPanel.Controllers
         [HttpGet]
         public IActionResult EditDevice(int id)
         {
-            Device device = _context.getDevice(id);
+            Device device = _deviceReposity.GetDeviceById(id);
 
             return View(device);
+        }
+
+        [HttpGet]
+        public IActionResult DeviceDetails(int id)
+        {
+            var device = _deviceReposity.GetDeviceById(id);
+            var eventList = _deviceReposity.GetAllDeviceEventsById(id);
+
+            return View(new DeviceViewModel(device, eventList[0].data, eventList) { });
         }
     }
 }
