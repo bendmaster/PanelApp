@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HomeApp.Data
+namespace SoilReaderPanel.Data
 {
     public class Device
     {
@@ -42,15 +42,14 @@ namespace HomeApp.Data
 
     public interface IDeviceRepository : IDisposable
     {
-        public bool AddDevice(Device device);
+        public Task<bool> AddDeviceAsync(Device device);
         public string UpdateDevice(Device device);
         public bool DeleteDevice(Device device);
         public Device GetDeviceById(int deviceId);
-        public List<DeviceViewModel> GetAllDevices();
 
         
-        public List<DeviceEvent> GetAllDeviceEventsById(int deviceId);        
-
+        public List<DeviceEvent> GetAllDeviceEventsById(int deviceId);
+        Task<List<DeviceViewModel>> GetAllDevicesAsync();
     }
 
     public class DeviceRepository : IDeviceRepository
@@ -75,7 +74,7 @@ namespace HomeApp.Data
 
             return device;
         }
-        public List<DeviceViewModel> GetAllDevices()
+        public async Task<List<DeviceViewModel>> GetAllDevicesAsync()
         {
             var deviceList = _context.Device.ToList();
 
@@ -87,7 +86,7 @@ namespace HomeApp.Data
             {
                 string deviceID = deviceList[i].ParticleDeviceID;
                 //Caching to limit calls to device and improve consistency
-                if (!deviceReadings.ContainsKey(deviceID))
+                if (!deviceReadings.ContainsKey(deviceID) || deviceReadings[deviceID] == "Unable to connect to device")
                 {
                     deviceReadingsAsync.Add(deviceID, _tokenClient.GetData(deviceList[i].ParticleDeviceID, "soil"));
                 }
@@ -96,13 +95,16 @@ namespace HomeApp.Data
             for (int i = 0; i < deviceList.Count; i++)
             {
                 string deviceID = deviceList[i].ParticleDeviceID;
-                if (deviceReadings.ContainsKey(deviceID))
+                if (deviceReadings.ContainsKey(deviceID) && deviceReadings[deviceID] != "Unable to connect to device")
                 {
                     AllDevices.Add(new DeviceViewModel(deviceList[i], deviceReadings[deviceID], null));
                 }
                 else
                 {
-                    var newDeviceEvent = deviceReadingsAsync[deviceID].Result;
+                    
+                    var newDeviceEventAsync = await deviceReadingsAsync[deviceID];
+                    //If device is unplugged or unreachable for any other reason
+                    var newDeviceEvent = newDeviceEventAsync == "fail" ? "Unable to connect to device" : newDeviceEventAsync;
                     _context.DeviceEvent.Add(new DeviceEvent()
                     {
                         eventType = "soil",
@@ -110,7 +112,7 @@ namespace HomeApp.Data
                         Device = deviceList[i],
                         TIMESTAMP = DateTime.Now.ToUniversalTime()
                     });
-                    deviceReadings.Add(deviceID, newDeviceEvent);
+                    deviceReadings[deviceID] = newDeviceEvent;
                     AllDevices.Add(new DeviceViewModel(deviceList[i], deviceReadings[deviceID], null));
                 }
 
@@ -166,8 +168,9 @@ namespace HomeApp.Data
             GC.SuppressFinalize(this);
         }
 
-        public bool AddDevice(Device device)
+        public async Task<bool> AddDeviceAsync(Device device)
         {
+            if (!(await _tokenClient.ValidateID(device.ParticleDeviceID))) return false;
             _context.Device.Add(device);
             try
             {
@@ -184,9 +187,47 @@ namespace HomeApp.Data
         {
             throw new NotImplementedException();
         }
+    
     }
 
+}
 
+public class DeviceRoleInformation
+{
+    public bool gateway { get; set; }
+    public string state { get; set; }
+}
 
+public class DeviceNetworkInformation
+{
+    public string id { get; set; }
+    public string name { get; set; }
+    public string type { get; set; }
+    public DeviceRoleInformation role { get; set; }
+}
 
+public class Variable { }
+public class DeviceJSON
+{
+    public string id { get; set; }
+    public string name { get; set; }
+    public object last_app { get; set; }
+    public string last_ip_address { get; set; }
+    public DateTime last_heard { get; set; }
+    public int product_id { get; set; }
+    public bool connected { get; set; }
+    public int platform_id { get; set; }
+    public bool cellular { get; set; }
+    public object notes { get; set; }
+    public DeviceNetworkInformation network { get; set; }
+    public string status { get; set; }
+    public string serial_number { get; set; }
+    public string mobile_secret { get; set; }
+    public string current_build_target { get; set; }
+    public string system_firmware_version { get; set; }
+    public string default_build_target { get; set; }
+    public Variable variables { get; set; }
+    public List<string> functions { get; set; }
+    public bool firmware_updates_enabled { get; set; }
+    public bool firmware_updates_forced { get; set; }
 }

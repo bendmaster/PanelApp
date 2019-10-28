@@ -1,4 +1,4 @@
-﻿using HomeApp.Data;
+﻿using SoilReaderPanel.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SoilReaderPanel.Models;

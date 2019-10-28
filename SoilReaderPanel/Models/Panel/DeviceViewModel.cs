@@ -1,4 +1,4 @@
-﻿using HomeApp.Data;
+﻿using SoilReaderPanel.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,6 +11,7 @@ namespace SoilReaderPanel.Models
     {     
         [Display(Name = "Reading")]
         public string Reading { get; set; }
+        public int ReadingAsInt { get; set; }
         public List<DeviceEvent>? DeviceEvents { get; set; }
 
         public DeviceViewModel(Device device, string latestReading, List<DeviceEvent>? deviceEvents)
@@ -21,6 +22,14 @@ namespace SoilReaderPanel.Models
             base.ImageLocation = device.ImageLocation;
             Reading = latestReading;
             DeviceEvents = deviceEvents;
+            try
+            {
+                ReadingAsInt = ((int)((double.Parse(latestReading) / 3200.0) * 100));
+            }
+            catch
+            {
+                ReadingAsInt = 0;
+            }
         }
     }
 }

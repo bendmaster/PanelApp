@@ -14,7 +14,7 @@ using SoilReaderPanel.Services;
 using SoilReaderPanel.Data;
 using SoilReaderPanel.Policies;
 using Microsoft.AspNetCore.Authorization;
-using HomeApp.Data;
+using SoilReaderPanel.Data;
 
 namespace SoilReaderPanel
 {

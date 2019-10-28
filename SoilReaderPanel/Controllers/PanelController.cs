@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using HomeApp.Data;
+using SoilReaderPanel.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -22,9 +22,9 @@ namespace SoilReaderPanel.Controllers
         {
             _deviceReposity = deviceRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            List<DeviceViewModel> listOfDevices = _deviceReposity.GetAllDevices();
+            List<DeviceViewModel> listOfDevices = await _deviceReposity.GetAllDevicesAsync();
             
             return View("Panel", listOfDevices);
         }
@@ -36,16 +36,17 @@ namespace SoilReaderPanel.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddDevice(Device device)
+        public async Task<IActionResult> AddDeviceAsync(Device device)
         {
             if (ModelState.IsValid)
             {
-                bool pass = _deviceReposity.AddDevice(device);
+                bool pass = await _deviceReposity.AddDeviceAsync(device);
                 if (pass)
                 {
                     return RedirectToAction("Index");
                 }
             }
+            ModelState.AddModelError("ParticleDeviceID", "Invalid or Unconnected Particle ID");
             return View("AddDevice", device);
         }
 

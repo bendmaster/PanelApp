@@ -1,12 +1,10 @@
-﻿@model HomeApp.Data.Device
+﻿@model SoilReaderPanel.Data.Device
 
 @{
-    ViewData["Title"] = "View";
+    ViewData["Title"] = "Add Device";
 }
 
-<h1>View</h1>
-
-<h4>Device</h4>
+<h4>Add Device</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -28,14 +26,14 @@
                 <span asp-validation-for="ImageLocation" class="text-danger"></span>
             </div>*@
             <div class="form-group">
-                <input type="submit" asp-action="AddDevice" class="btn btn-primary" />
+                <button type="submit" asp-action="AddDevice" class="btn btn-primary"> Add </button>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to Devices</a>
 </div>
 
 @section Scripts {

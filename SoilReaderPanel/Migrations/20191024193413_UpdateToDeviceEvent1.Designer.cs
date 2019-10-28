@@ -21,7 +21,7 @@ namespace SoilReaderPanel.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("HomeApp.Data.Device", b =>
+            modelBuilder.Entity("SoilReaderPanel.Data.Device", b =>
                 {
                     b.Property<int>("DeviceID")
                         .ValueGeneratedOnAdd()
@@ -44,7 +44,7 @@ namespace SoilReaderPanel.Migrations
                     b.ToTable("Device");
                 });
 
-            modelBuilder.Entity("HomeApp.Data.DeviceEvent", b =>
+            modelBuilder.Entity("SoilReaderPanel.Data.DeviceEvent", b =>
                 {
                     b.Property<int>("eventId")
                         .ValueGeneratedOnAdd()
@@ -273,9 +273,9 @@ namespace SoilReaderPanel.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("HomeApp.Data.DeviceEvent", b =>
+            modelBuilder.Entity("SoilReaderPanel.Data.DeviceEvent", b =>
                 {
-                    b.HasOne("HomeApp.Data.Device", "Device")
+                    b.HasOne("SoilReaderPanel.Data.Device", "Device")
                         .WithMany("Events")
                         .HasForeignKey("DeviceID");
                 });
