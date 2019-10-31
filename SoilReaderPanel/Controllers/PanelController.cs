@@ -58,6 +58,14 @@ namespace SoilReaderPanel.Controllers
             return View(device);
         }
 
+        [HttpPost]
+        public IActionResult EditDevice(Device device)
+        {
+            bool result = _deviceReposity.EditDevice(device);
+
+            return View(device);
+        }
+
         [HttpGet]
         public IActionResult DeviceDetails(int id)
         {

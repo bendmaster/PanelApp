@@ -50,6 +50,7 @@ namespace SoilReaderPanel.Data
         
         public List<DeviceEvent> GetAllDeviceEventsById(int deviceId);
         Task<List<DeviceViewModel>> GetAllDevicesAsync();
+        public bool EditDevice(Device device);
     }
 
     public class DeviceRepository : IDeviceRepository
@@ -135,6 +136,23 @@ namespace SoilReaderPanel.Data
             });
             _context.SaveChanges();
             return newEvent.Result;
+        }
+
+        public bool EditDevice(Device device)
+        {
+            var deviceToUpdate = _context.Device.Find(device.DeviceID);
+            if (deviceToUpdate == null) { throw new Exception("Unable to find the recipe"); }
+            else
+            {
+                deviceToUpdate.DeviceName = device.DeviceName;
+                deviceToUpdate.ParticleDeviceID = device.ParticleDeviceID;
+                deviceToUpdate.ImageLocation = device.ImageLocation;
+
+            }
+            _context.SaveChanges();
+            return true;
+
+
         }
 
         public List<DeviceEvent> GetAllDeviceEventsById(int deviceId)
